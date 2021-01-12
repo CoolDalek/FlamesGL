@@ -9,13 +9,18 @@ import org.jbox2d.dynamics.World
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.image.Image
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.BorderPane
 
-trait BasicGame extends GameApp[Canvas, HBox] {
+trait BasicGame extends GameApp[Canvas, BorderPane] {
 
   val renderComponent: Lazy[Canvas] = Lazy(new Canvas(300, 400))
 
-  val rootComponent: Lazy[HBox] = renderComponent.map(new HBox(_))
+  val rootComponent: Lazy[BorderPane] =
+    renderComponent.map { render =>
+      new BorderPane() {
+        center = render
+      }
+    }
 
   val window: Lazy[Scene] =
     rootComponent.map { component =>
