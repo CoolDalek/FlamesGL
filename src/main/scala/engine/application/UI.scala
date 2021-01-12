@@ -11,7 +11,7 @@ trait UI[Renderer <: Node, Root <: Parent] {
 
   val rootComponent: Lazy[Root]
 
-  val window: Lazy[Scene]
+  val scene: Lazy[Scene]
 
   val stage: Lazy[PrimaryStage]
 

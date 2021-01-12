@@ -9,20 +9,20 @@ import org.jbox2d.dynamics.World
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.image.Image
-import scalafx.scene.layout.BorderPane
+import scalafx.scene.layout.AnchorPane
 
-trait BasicGame extends Game[Canvas, BorderPane] {
+trait BasicGame extends Game[Canvas, AnchorPane] {
 
-  val renderComponent: Lazy[Canvas] = Lazy(new Canvas(300, 400))
+  val renderComponent: Lazy[Canvas] = Lazy(new Canvas())
 
-  val rootComponent: Lazy[BorderPane] =
+  val rootComponent: Lazy[AnchorPane] =
     renderComponent.map { render =>
-      new BorderPane() {
-        center = render
+      new AnchorPane() {
+        children = render
       }
     }
 
-  val window: Lazy[Scene] =
+  val scene: Lazy[Scene] =
     rootComponent.map { component =>
 
       new Scene {
@@ -32,7 +32,7 @@ trait BasicGame extends Game[Canvas, BorderPane] {
     }
 
   val stage: Lazy[PrimaryStage] =
-    window.map { mainScene =>
+    scene.map { mainScene =>
 
       new PrimaryStage {
 
@@ -50,7 +50,13 @@ trait BasicGame extends Game[Canvas, BorderPane] {
 
     }
 
-  val keyboardHandlers: Lazy[KeyboardHandlers] = window.map(new KeyboardHandlersSets(_))
+  stage.onInit { it =>
+    val canvas = renderComponent()
+    canvas.width <== it.width
+    canvas.height <== it.height
+  }
+
+  val keyboardHandlers: Lazy[KeyboardHandlers] = scene.map(new KeyboardHandlersSets(_))
 
   val gameWorld: Lazy[World] = Lazy(new World(new Vec2()))
 
