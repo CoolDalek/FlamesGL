@@ -1,20 +1,11 @@
 package engine.application
 
-import engine.application.GameLauncher.GameStage
-import engine.events.KeyboardHandlers
-import engine.utils.Lazy
-import scalafx.scene.{Node, Parent, Scene}
+import engine.application.Launcher.PrimaryStage
+import scalafx.scene.{Node, Parent}
 
-trait App[Renderer <: Node, Root <: Parent] {
+trait App[Renderer <: Node, Root <: Parent]
+  extends Launcher with UI[Renderer, Root] {
 
-  val renderComponent: Lazy[Renderer]
-
-  val rootComponent: Lazy[Root]
-
-  val window: Lazy[Scene]
-
-  val stage: Lazy[GameStage]
-
-  val keyboardHandlers: Lazy[KeyboardHandlers]
+  override def boot(): PrimaryStage = stage()
 
 }

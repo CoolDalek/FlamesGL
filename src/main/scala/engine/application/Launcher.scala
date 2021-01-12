@@ -1,39 +1,39 @@
 package engine.application
 
-import engine.application.GameLauncher.{GameStage, _}
+import engine.application.Launcher.{PrimaryStage, _}
 import javafx.application.Application
 import javafx.stage.{Stage => jfxStage}
 import scalafx.stage.{Stage => sfxStage}
 
-trait GameLauncher {
+trait Launcher {
 
   def main(args: Array[String]): Unit = {
-    ActiveGameApp = this
+    ActiveApp = this
     Application.launch(classOf[LaunchHelper], args: _*)
   }
 
-  def boot(): GameStage
+  def boot(): PrimaryStage
 
 }
 
-object GameLauncher {
+object Launcher {
 
   private[application] class LaunchHelper extends Application {
 
     override def start(primaryStage: jfxStage): Unit = {
       ActiveJFXApp = this
       Stage = primaryStage
-      ActiveGameApp.boot().show()
+      ActiveApp.boot().show()
     }
 
   }
 
   private[application] var ActiveJFXApp: Application = _
 
-  private[application] var ActiveGameApp: GameLauncher = _
+  private[application] var ActiveApp: Launcher = _
 
   private[application] var Stage: jfxStage = _
 
-  class GameStage extends sfxStage(Stage)
+  class PrimaryStage extends sfxStage(Stage)
 
 }

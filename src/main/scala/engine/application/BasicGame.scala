@@ -1,6 +1,6 @@
 package engine.application
 
-import engine.application.GameLauncher.GameStage
+import engine.application.Launcher.PrimaryStage
 import engine.events.KeyboardHandlers
 import engine.events.impls.KeyboardHandlersSets
 import engine.utils.Lazy
@@ -11,7 +11,7 @@ import scalafx.scene.canvas.Canvas
 import scalafx.scene.image.Image
 import scalafx.scene.layout.BorderPane
 
-trait BasicGame extends GameApp[Canvas, BorderPane] {
+trait BasicGame extends Game[Canvas, BorderPane] {
 
   val renderComponent: Lazy[Canvas] = Lazy(new Canvas(300, 400))
 
@@ -31,10 +31,10 @@ trait BasicGame extends GameApp[Canvas, BorderPane] {
 
     }
 
-  val stage: Lazy[GameStage] =
+  val stage: Lazy[PrimaryStage] =
     window.map { mainScene =>
 
-      new GameStage {
+      new PrimaryStage {
 
         icons += new Image("icon.png")
 
