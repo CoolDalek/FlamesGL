@@ -12,6 +12,14 @@ object View {
 
   }
 
+  trait StatefulView[Graphics, State, CurrEnv <: Environment[CurrEnv]] extends View {
+
+    def apply(state: State)(implicit env: CurrEnv): Graphics = graphics(state)
+
+    def graphics(state: State)(implicit env: CurrEnv): Graphics
+
+  }
+
   def stateless[Graphics, CurrEnv <: Environment[CurrEnv]]
   (fabric: CurrEnv => Graphics): StatelessView[Graphics, CurrEnv] =
     new StatelessView[Graphics, CurrEnv] {
@@ -26,14 +34,6 @@ object View {
       def graphics()(implicit env: CurrEnv): Graphics = fabric
 
     }
-
-  trait StatefulView[Graphics, State, CurrEnv <: Environment[CurrEnv]] extends View {
-
-    def apply(state: State)(implicit env: CurrEnv): Graphics = graphics(state)
-
-    def graphics(state: State)(implicit env: CurrEnv): Graphics
-
-  }
 
   def stateful[Graphics, State, CurrEnv <: Environment[CurrEnv]]
   (fabric: (State, CurrEnv) => Graphics): StatefulView[Graphics, State, CurrEnv] =
