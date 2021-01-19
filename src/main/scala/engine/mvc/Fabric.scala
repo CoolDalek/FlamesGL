@@ -35,6 +35,10 @@ object Fabric {
 
   trait StatefulFabric[Graphics, State, CurrEnv <: Environment[CurrEnv]] extends Fabric {
 
+    import engine.mvc.{Model => TypedModel}
+
+    type Model = TypedModel[State]
+
     type View = View.StatefulView[Graphics, State, CurrEnv]
 
     type Controller = Controller.StatefulController[Graphics, State, CurrEnv]
@@ -43,7 +47,7 @@ object Fabric {
 
     protected val view: View
 
-    protected val model: Model[State]
+    protected val model: Model
 
     protected def view(fabric: State => Graphics): View =
       View.stateful(fabric)
