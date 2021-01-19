@@ -1,10 +1,10 @@
-package engine.time.impls
+package engine.time.impl
 
 import engine.time.TimerComponents
 import javafx.animation.AnimationTimer
 import scalafx.event.subscriptions.Subscription
 
-import scala.collection.concurrent.TrieMap
+import scala.collection.mutable
 
 trait TimerComponentsAnimation extends TimerComponents {
 
@@ -12,8 +12,8 @@ trait TimerComponentsAnimation extends TimerComponents {
 
   private object TimerImpl extends Timer {
 
-    val tickingHandlers: TrieMap[String, Double => Unit] =
-      TrieMap.empty[String, Double => Unit]
+    val tickingHandlers: mutable.Set[Double => Unit] =
+      mutable.Set.empty[Double => Unit]
 
     val animationTimer: AnimationTimer =
       new AnimationTimer {
@@ -22,7 +22,7 @@ trait TimerComponentsAnimation extends TimerComponents {
         override def handle(now: Long): Unit = {
           val delta = now - lastTime
           if(lastTime > 0) {
-            tickingHandlers.foreach { case (_, func) =>
+            tickingHandlers.foreach { func =>
               func(delta.toDouble)
             }
           }
@@ -32,9 +32,8 @@ trait TimerComponentsAnimation extends TimerComponents {
       }
 
     override def handle(handler: Double => Unit): Subscription = {
-      val name = handler.toString()
-      tickingHandlers.addOne(name -> handler)
-      () => tickingHandlers.remove(name)
+      tickingHandlers.addOne(handler)
+      () => tickingHandlers.remove(handler)
     }
 
     override def start(): Unit = animationTimer.start()

@@ -2,7 +2,7 @@ package engine.application
 
 import engine.application.Launcher.PrimaryStage
 import engine.events.KeyboardHandlers
-import engine.events.impls.KeyboardHandlersSets
+import engine.events.impl.KeyboardHandlersSets
 import engine.utils.Lazy
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.World

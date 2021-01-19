@@ -1,4 +1,4 @@
-package engine.events.impls
+package engine.events.impl
 
 import engine.events.KeyboardHandlers
 import scalafx.Includes._
