@@ -1,4 +1,4 @@
-package engine.helpers
+package engine.fxAdditions
 
 import javafx.scene.{image => jfxsi, paint => jfxsp}
 import scalafx.delegate.SFXDelegate

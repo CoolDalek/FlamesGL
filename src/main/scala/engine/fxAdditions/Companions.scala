@@ -1,4 +1,4 @@
-package engine.helpers
+package engine.fxAdditions
 
 import scalafx.scene.Node
 import scalafx.scene.layout.AnchorPane
