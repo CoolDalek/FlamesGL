@@ -22,7 +22,7 @@ object SizeObservable {
 
     }
 
-  trait SizeObservableImplicits {
+  trait Implicits {
     import scalafx.scene.Scene
     import scalafx.stage.Window
 

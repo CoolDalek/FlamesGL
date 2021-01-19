@@ -1,15 +1,13 @@
 package engine.fxAdditions
 
-import engine.fxAdditions.SizeObservable.SizeObservableImplicits
-import engine.fxAdditions.SizeObserver.SizeObserverImplicits
 import scalafx.Includes._
 import scalafx.event.subscriptions.Subscription
 import scalafx.scene.paint.Color
 import scalafx.scene.{Node, Scene}
 
 object Includes
-  extends SizeObservableImplicits
-    with SizeObserverImplicits {
+  extends SizeObservable.Implicits
+    with SizeObserver.Implicits {
 
 
   implicit class UberMegaCoolColor(val color: Color) extends AnyVal {

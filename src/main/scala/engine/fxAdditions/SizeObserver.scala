@@ -3,7 +3,7 @@ package engine.fxAdditions
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.event.subscriptions.Subscription
 
-class SizeObserver[T](val resizable: T, val observable: SizeObservable[_ >: T]) {
+class SizeObserver[T](resizable: T, observable: SizeObservable[_ >: T]) {
 
   private def height: ReadOnlyDoubleProperty = observable.height(resizable)
 
@@ -40,7 +40,7 @@ class SizeObserver[T](val resizable: T, val observable: SizeObservable[_ >: T]) 
 
 object SizeObserver {
 
-  trait SizeObserverImplicits {
+  trait Implicits {
     import scala.language.implicitConversions
 
     implicit def sizeObserverSyntax[T](resizable: T)
