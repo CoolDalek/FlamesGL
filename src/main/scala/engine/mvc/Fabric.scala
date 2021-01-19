@@ -49,6 +49,8 @@ object Fabric {
 
     protected val model: Model
 
+    protected def model(state: State): Model = TypedModel.model(state)
+
     protected def view(fabric: State => Graphics): View =
       View.stateful(fabric)
 
