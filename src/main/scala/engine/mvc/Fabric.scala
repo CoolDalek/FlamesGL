@@ -2,30 +2,30 @@ package engine.mvc
 
 import engine.utils.Lazy
 
+import scala.language.implicitConversions
+
 trait Fabric
 
 object Fabric {
 
   trait StatelessFabric[Graphics, CurrEnv <: Environment[CurrEnv]] extends Fabric {
 
-    type View = View.StatelessView[Graphics, CurrEnv]
+    type View = CurrEnv => Graphics
 
-    type Controller = Controller.StatelessController[Graphics, CurrEnv]
+    type Controller = (Graphics, CurrEnv) => Graphics
 
     protected val controller: Controller
 
     protected val view: View
 
-    protected def view(fabric: CurrEnv => Graphics): View =
-      View.stateless(fabric)
+    protected implicit def view(fabric: => Graphics): View =
+      (_: CurrEnv) => fabric
 
-    protected def view(fabric: => Graphics): View =
-      View.stateless(fabric)
+    protected def view(fabric: CurrEnv => Graphics): View = fabric
 
-    protected def emptyController(): Controller =
-      Controller.emptyStateless[Graphics, CurrEnv]()
+    protected def emptyController(): Controller = (graphics: Graphics, _: CurrEnv) => graphics
 
-    def build()(implicit env: CurrEnv): Graphics = controller(view())
+    def build()(implicit env: CurrEnv): Graphics = controller(view(env), env)
 
     def apply()(implicit env: CurrEnv): Graphics = build()
 
@@ -33,15 +33,11 @@ object Fabric {
 
   }
 
-  trait StatefulFabric[Graphics, State, CurrEnv <: Environment[CurrEnv]] extends Fabric {
+  trait StatefulFabric[Graphics, Model, CurrEnv <: Environment[CurrEnv]] extends Fabric {
 
-    import engine.mvc.{Model => TypedModel}
+    type View = (Model, CurrEnv) => Graphics
 
-    type Model = TypedModel[State]
-
-    type View = View.StatefulView[Graphics, State, CurrEnv]
-
-    type Controller = Controller.StatefulController[Graphics, State, CurrEnv]
+    type Controller = (Graphics, Model, CurrEnv) => Graphics
 
     protected val controller: Controller
 
@@ -49,21 +45,14 @@ object Fabric {
 
     protected val model: Model
 
-    protected def model(state: State): Model = TypedModel.model(state)
+    protected implicit def view(fabric: Model => Graphics): View =
+      (model: Model, _: CurrEnv) => fabric(model)
 
-    protected def view(fabric: State => Graphics): View =
-      View.stateful(fabric)
+    protected def view(fabric: (Model, CurrEnv) => Graphics): View = fabric
 
-    protected def view(fabric: (State, CurrEnv) => Graphics): View =
-      View.stateful(fabric)
+    protected def emptyController(): Controller = (graphics: Graphics, _: Model, _: CurrEnv) => graphics
 
-    protected def emptyController(): Controller =
-      Controller.emptyStateful[Graphics, State, CurrEnv]()
-
-    def build()(implicit env: CurrEnv): Graphics = {
-      val state = model()
-      controller(view(state), state)
-    }
+    def build()(implicit env: CurrEnv): Graphics = controller(view(model, env), model, env)
 
     def apply()(implicit env: CurrEnv): Graphics = build()
 
